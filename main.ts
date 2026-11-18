@@ -256,68 +256,91 @@ function badge(n, cx, cy, r, bg = RED) {
 }
 
 // ---------- the stories of Wednesday 18 November 2026 ----------
-// [number, headline, longitude, latitude]; lon/lat null = no single place on the map
 const LEAD = {
   kicker: 'APEC SUMMIT, SHENZHEN',
-  head: 'Trump lands in China as Xi and Putin meet',
-  ctx: 'Xi breaks protocol to greet Trump at the airport; Putin tells Xi sanctions have failed. Rare US-China-Russia three-way talks are set for Thursday.',
+  head: 'Trump lands in China for APEC',
+  ctx: 'Xi and Putin meet in Shenzhen; rare three-way talks set for Thursday',
   at: [114.1, 22.5],
 };
-const TOP = [
-  [2, 'Iranian drones target US base in Kuwait', 'Bahrain intercepts attacks; US says no damage done', 47.9, 29.3],
-  [3, 'Nvidia record quarter halts tech sell-off', 'Revenue $115.8bn; shares +3.7%; gold under $3,800', -74.0, 40.7],
-  [4, 'COP31 split over fossil-fuel exit', "Australia's Bowen backs Pacific text; EU objects", 30.7, 36.9],
-  [5, 'WHO urges Gaza aid as floods swamp camps', 'Fourth winter of war: displaced face cold, disease', 34.4, 31.5],
-  [6, 'EU proposes EUR 45bn loan for Ukraine', "Von der Leyen's plan rests on joint EU borrowing", 4.4, 50.8],
-  [7, 'Germany pledges new air defences to Kyiv', 'Pistorius adds guided missiles, F-16 ammunition', 13.4, 52.5],
+// [category, headline of 3-7 words, lon, lat]; lon null = no single place on the map.
+// Reading order: the left column, then the right one; numbers follow it, after the lead's 1.
+const ROWS = [
+  ['conflict', 'Iran drones target US base', 47.9, 29.3],
+  ['economy', 'Nvidia record lifts stocks', -74.0, 40.7],
+  ['climate', 'COP31 split on fossil fuels', 30.7, 36.9],
+  ['health', 'Gaza floods: WHO urges aid', 34.4, 31.5],
+  ['economy', 'EU plans EUR 45bn Kyiv loan', 4.4, 50.8],
+  ['conflict', 'German air defence for Kyiv', 13.4, 52.5],
+  ['politics', 'UK sanctions West Bank firms', 35.2, 31.9],
+  ['conflict', 'US officer held over spying', -0.1, 51.5],
+  ['conflict', 'Serbian military jet crashes', 20.2, 45.0],
+  ['conflict', 'Siberia plane crash kills 19', 86.1, 55.4],
+  ['economy', 'ECB likens AI boom to dotcom', 8.7, 50.1],
+  ['economy', 'Gold falls below $3,800', null, null],
+  ['politics', 'Chagos: Mauritius warns UK', 57.5, -20.2],
+  ['politics', 'Pretoria rebukes Nigeria envoy', 28.2, -25.7],
+  ['politics', "Mongolia's president to quit", 106.9, 47.9],
+  ['politics', "Xi meets South Korea's Lee", null, null],
+  ['economy', 'Bangladesh garment protests', 90.4, 23.8],
+  ['economy', 'Air Niugini adds fuel charge', 147.2, -9.4],
+  ['politics', 'Peltola wins Alaska Senate', -149.9, 61.2],
+  ['economy', 'Canada, China ease tariffs', -75.7, 45.4],
+  ['politics', 'Paraguay top prosecutor quits', -57.6, -25.3],
+  ['economy', 'Venezuela unions call strike', -66.9, 10.5],
+  ['tech', 'AI finds critical Java flaw', null, null],
+  ['culture', 'GTA VI launches at midnight', null, null],
+  ['sport', 'Knicks beat Raptors 111-102', -79.4, 43.7],
+  ['sport', 'Diallo enters FIFA race', 8.5, 47.4],
 ];
-// sections in reading order; colOf below says which column each one goes in
-// [headline, lon, lat]; numbers are given in reading order after the top stories
-const SECTIONS = [
-  ['AMERICAS', [
-    ['Peltola wins Alaska Senate race', -149.9, 61.2],
-    ['Canada and China agree to ease tariffs', -75.7, 45.4],
-    ["Paraguay's attorney general quits ahead of impeachment", -57.6, -25.3],
-    ['Venezuelan unions call 24-hour strike over wages', -66.9, 10.5],
-  ]],
-  ['SPORT', [
-    ['NBA: Knicks beat Raptors for 15th straight time', -79.4, 43.7],
-    ["French FA's Diallo to run against Infantino for FIFA", 8.5, 47.4],
-    ['Spanish fan sentenced for racist abuse of Mbappe', -5.85, 43.4],
-  ]],
-  ['EUROPE', [
-    ['US Army officer held in UK on suspicion of spying for Russia', -0.1, 51.5],
-    ['Serbian MiG-29 crashes near Belgrade; pilot killed', 20.2, 45.0],
-    ['Military plane crash in Siberia kills 19', 86.1, 55.4],
-    ['ECB likens AI boom to the dotcom bubble', 8.7, 50.1],
-    ['Paris court lifts protest ban near schools', 2.35, 48.85],
-    ['Finland urges a timetable for Ukraine peace talks', 24.9, 60.2],
-    ['Zelenskyy proposes more aid missions to occupied areas', 30.5, 50.45],
-  ]],
-  ['MIDDLE EAST, AFRICA', [
-    ['UK sanctions 8 West Bank settlement firms; Israel vows reply', 35.2, 31.9],
-    ['Oman, Iran, Uzbekistan urge safe Gulf shipping', 58.4, 23.6],
-    ['Mauritius sets UK December deadline on Chagos', 57.5, -20.2],
-    ["South Africa rebukes Nigeria's new envoy", 28.2, -25.7],
-    ['Nigeria weighs bill to decriminalise attempted suicide', 7.5, 9.1],
-  ]],
-  ['ASIA-PACIFIC', [
-    ["Mongolia's president says he will step down", 106.9, 47.9],
-    ['Bangladesh garment strike: 55 factories shut, 300 held', 90.4, 23.8],
-    ["Xi meets South Korea's Lee at APEC", null, null],
-    ['Air Niugini adds fuel surcharge as jet fuel soars', 147.2, -9.4],
-    ['UK institutes deny ties to Pacific seabed mining bid', -160, -15],
-  ]],
-  ['TECH AND CULTURE', [
-    ['AI finds critical Java flaw; US, Canada, S. Korea urge patches', null, null],
-    ['GTA VI launches after a 13-year wait', null, null],
-  ]],
-];
-let nextNo = TOP.length + 2;
-for (const [, list] of SECTIONS) for (const s of list) s.unshift(nextNo++);
-const STORIES = nextNo - 1;
+const STORIES = ROWS.length + 1;
 
-// ---------- coarse coastlines, [lon, lat] ----------
+// ---------- section icons, drawn in a box of side s ----------
+const CAT = {
+  politics: [36, 70, 150], conflict: [196, 40, 30], economy: [20, 125, 60], climate: [0, 128, 150],
+  health: [205, 30, 45], tech: [105, 60, 165], sport: [225, 115, 15], culture: [170, 40, 125],
+};
+function icon(cat, x, y, s) {
+  const c = CAT[cat];
+  if (cat === 'politics') {
+    poly([[x + s * 0.5, y + s * 0.02], [x + s, y + s * 0.3], [x, y + s * 0.3]], c);
+    for (const k of [0.1, 0.42, 0.74]) rect(x + s * k, y + s * 0.36, s * 0.16, s * 0.44, c);
+    rect(x, y + s * 0.84, s, s * 0.14, c);
+  } else if (cat === 'conflict') {
+    const p = [];
+    for (let i = 0; i < 16; i++) {
+      const a = (i * Math.PI) / 8, r = i % 2 ? s * 0.22 : s * 0.5;
+      p.push([x + s / 2 + Math.cos(a) * r, y + s / 2 + Math.sin(a) * r]);
+    }
+    poly(p, c);
+  } else if (cat === 'economy') {
+    rect(x + s * 0.04, y + s * 0.56, s * 0.24, s * 0.42, c);
+    rect(x + s * 0.38, y + s * 0.32, s * 0.24, s * 0.66, c);
+    rect(x + s * 0.72, y + s * 0.04, s * 0.24, s * 0.94, c);
+  } else if (cat === 'climate') {
+    line(x + s * 0.5, y + s * 0.12, x + s * 0.5, y + s * 0.62, s * 0.26, c);
+    disc(x + s * 0.5, y + s * 0.76, s * 0.23, c);
+    line(x + s * 0.5, y + s * 0.3, x + s * 0.5, y + s * 0.7, s * 0.08, WHITE);
+  } else if (cat === 'health') {
+    rect(x + s * 0.34, y, s * 0.32, s, c);
+    rect(x, y + s * 0.34, s, s * 0.32, c);
+  } else if (cat === 'tech') {
+    for (const k of [0.3, 0.5, 0.7]) {
+      line(x + s * k, y, x + s * k, y + s, s * 0.08, c);
+      line(x, y + s * k, x + s, y + s * k, s * 0.08, c);
+    }
+    rect(x + s * 0.16, y + s * 0.16, s * 0.68, s * 0.68, c);
+    rect(x + s * 0.34, y + s * 0.34, s * 0.32, s * 0.32, WHITE);
+  } else if (cat === 'sport') {
+    disc(x + s / 2, y + s / 2, s * 0.48, c);
+    line(x + s / 2, y + s * 0.04, x + s / 2, y + s * 0.96, s * 0.07, WHITE);
+    line(x + s * 0.04, y + s / 2, x + s * 0.96, y + s / 2, s * 0.07, WHITE);
+  } else if (cat === 'culture') {
+    rect(x, y + s * 0.08, s, s * 0.84, c);
+    poly([[x + s * 0.36, y + s * 0.26], [x + s * 0.74, y + s * 0.5], [x + s * 0.36, y + s * 0.74]], WHITE);
+  }
+}
+
+// ---------- coastlines, [lon, lat], smoothed with Chaikin's corner cutting ----------
 const LANDS = [
   [[-168, 66], [-162, 70], [-140, 70], [-125, 70], [-95, 72], [-80, 73], [-62, 66], [-55, 52], [-66, 45], [-70, 41], [-76, 35], [-81, 31], [-80, 25], [-83, 29], [-90, 29], [-97, 26], [-97, 20], [-90, 21], [-87, 15], [-83, 9], [-79, 8], [-84, 10], [-88, 13], [-92, 15], [-105, 20], [-110, 24], [-112, 31], [-117, 32], [-124, 40], [-124, 48], [-130, 55], [-140, 60], [-152, 58], [-165, 60]],
   [[-73, 78], [-60, 82], [-30, 83], [-20, 75], [-22, 70], [-40, 65], [-45, 60], [-52, 64], [-60, 70]],
@@ -337,6 +360,17 @@ const LANDS = [
   [[120, 18], [122, 18], [126, 7], [122, 7]],
   [[-24, 64], [-14, 64], [-15, 66], [-22, 66]],
 ];
+function chaikin(p, rounds) {
+  for (let r = 0; r < rounds; r++) {
+    const q = [];
+    for (let i = 0; i < p.length; i++) {
+      const [ax, ay] = p[i], [bx, by] = p[(i + 1) % p.length];
+      q.push([ax * 0.75 + bx * 0.25, ay * 0.75 + by * 0.25], [ax * 0.25 + bx * 0.75, ay * 0.25 + by * 0.75]);
+    }
+    p = q;
+  }
+  return p;
+}
 
 // ================= the page =================
 rect(0, 0, W, H, PAPER);
@@ -344,15 +378,15 @@ const M = 16; // outer margin
 rect(0, 0, W, 6, INK);
 
 // masthead line
-text('THE WORLD ON ONE PAGE', M, 16, 12, RED, BOLD, 1.6);
-const mline = `${STORIES} stories from six continents`;
-text(mline, W - M - measure(mline, 12, REG), 16, 12, GREY, REG);
+text('THE WORLD ON ONE PAGE', M, 17, 14, RED, BOLD, 1.6);
+const mline = `${STORIES} stories, six continents`;
+text(mline, W - M - measure(mline, 14, REG), 17, 14, GREY, REG);
 
 // the date, as big as it fits
 const DATE = 'Wednesday 18 November 2026';
-const ds = fit(DATE, 52, BOLD, W - 2 * M);
-text(DATE, (W - measure(DATE, ds, BOLD)) / 2, 40, ds, INK, BOLD);
-let y = 40 + ds * 1.42;
+const ds = fit(DATE, 56, BOLD, W - 2 * M);
+text(DATE, (W - measure(DATE, ds, BOLD)) / 2, 44, ds, INK, BOLD);
+let y = 44 + ds * 1.4;
 rect(M, y, W - 2 * M, 3, INK);
 y += 12;
 
@@ -377,87 +411,71 @@ function flagRU(x, fy, w, h) {
   rect(x, fy + h / 3, w, h / 3, [0, 57, 166]);
   rect(x, fy + (2 * h) / 3, w, h / 3, [213, 43, 30]);
 }
-const FW = 54, FH = 34;
+const FW = 54, FH = 33;
 [flagUS, flagCN, flagRU].forEach((f, i) => {
-  const fy = y + 2 + i * (FH + 6);
+  const fy = y + 1 + i * (FH + 5);
   rect(M, fy, FW, FH, WHITE);
   f(M, fy, FW, FH);
   rect(M - 1, fy - 1, FW + 2, 1, INK); rect(M - 1, fy + FH, FW + 2, 1, INK);
   rect(M - 1, fy, 1, FH, INK); rect(M + FW, fy, 1, FH, INK);
 });
-const LX = M + FW + 16, LW = W - M - LX;
-badge(1, LX + 9, y + 7, 9);
-text(LEAD.kicker, LX + 24, y + 1, 12, RED, BOLD, 1.2);
-const hs = fit(LEAD.head, 34, BOLD, LW);
-text(LEAD.head, LX, y + 24, hs, INK, BOLD);
-y = para(LEAD.ctx, LX, y + 24 + hs * 1.55, 15, GREY, REG, LW, 1.55);
-y = Math.max(y, 0) + 2;
+const flagsEnd = y + 3 * FH + 2 * 5 + 2;
+const LX = M + FW + 18, LW = W - M - LX;
+badge(1, LX + 10, y + 8, 10, INK);
+text(LEAD.kicker, LX + 27, y + 1, 14, RED, BOLD, 1.3);
+const hs = fit(LEAD.head, 42, BOLD, LW);
+text(LEAD.head, LX, y + 26, hs, INK, BOLD);
+const cs = fit(LEAD.ctx, 20, REG, LW);
+text(LEAD.ctx, LX, y + 26 + hs * 1.5, cs, [45, 43, 40], REG);
+y = Math.max(y + 26 + hs * 1.5 + cs * 1.45, flagsEnd) + 8;
 rect(M, y, W - 2 * M, 2, INK);
 y += 10;
 
-// world map (equirectangular, lon -170..190, lat 78..-56)
-const MX = M, MY = y + 4, MW = 496, MH = (MW * 134) / 360;
-const LON0 = -170;
-const proj = (lon, lat) => [MX + ((((lon - LON0) % 360) + 360) % 360) / 360 * MW, MY + ((78 - lat) / 134) * MH];
+// world map (equirectangular, lon -170..190, from lat 74 down as far as its height allows),
+// smoothed coasts clipped to its frame
+const ROWH = 37, NROW = Math.ceil(ROWS.length / 2);
+const MW = W - 2 * M, MH = H - M - NROW * ROWH - 14 - y;
+const MX = M, MY = y;
+const LON0 = -170, LAT0 = 72, LATSPAN = (MH * 360) / MW;
+const clampX = (v) => Math.min(MX + MW, Math.max(MX, v)), clampY = (v) => Math.min(MY + MH, Math.max(MY, v));
+const proj = (lon, lat) => [MX + ((((lon - LON0) % 360) + 360) % 360) / 360 * MW, MY + ((LAT0 - lat) / LATSPAN) * MH];
 rect(MX, MY, MW, MH, SEA);
-for (const L of LANDS) poly(L.map(([lo, la]) => proj(lo, la)), LAND);
-// markers, nudged apart so none hide another; a thin leader joins a moved marker to its place
-const marks = [[1, ...LEAD.at], ...TOP.map((t) => [t[0], t[3], t[4]])];
-for (const [, list] of SECTIONS) for (const s of list) if (s[2] !== null) marks.push([s[0], s[2], s[3]]);
-const MR = 7.5;
+for (const L of LANDS) poly(chaikin(L.map(([lo, la]) => proj(lo, la)), 2).map(([px, py]) => [clampX(px), clampY(py)]), LAND);
+rect(MX, MY + MH - 1, MW, 1, [150, 145, 135]);
+// numbered markers, nudged apart so none hides another; a leader joins a moved one to its place
+const marks = [[1, ...LEAD.at]];
+ROWS.forEach((r, i) => { if (r[2] !== null) marks.push([i + 2, r[2], r[3]]); });
+const MR = 10.5;
 const pts = marks.map(([n, lo, la]) => { const [px, py] = proj(lo, la); return { n, ox: px, oy: py, x: px, y: py }; });
-for (let it = 0; it < 120; it++)
+for (let it = 0; it < 200; it++)
   for (let i = 0; i < pts.length; i++)
     for (let j = i + 1; j < pts.length; j++) {
       const a = pts[i], b = pts[j];
       let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
-      const need = 2 * MR + 1.5;
+      const need = 2 * MR + 3;
       if (d >= need) continue;
       if (d < 1e-6) { dx = 1; dy = 0.3; d = Math.hypot(dx, dy); }
       const push = (need - d) / 2;
       a.x -= (dx / d) * push; a.y -= (dy / d) * push;
       b.x += (dx / d) * push; b.y += (dy / d) * push;
     }
-for (const p of pts) {
-  p.x = Math.min(MX + MW - MR, Math.max(MX + MR, p.x));
-  p.y = Math.min(MY + MH - MR, Math.max(MY + MR, p.y));
-}
-for (const p of pts) if (Math.hypot(p.x - p.ox, p.y - p.oy) > 2) { line(p.ox, p.oy, p.x, p.y, 1, INK); disc(p.ox, p.oy, 1.6, INK); }
-for (const p of pts) { disc(p.x, p.y, MR + 1, WHITE); badge(p.n, p.x, p.y, MR, p.n === 1 ? INK : RED); }
-rect(MX, MY + MH, MW, 1, INK);
-text('Numbers on the map mark where each story happened', MX, MY + MH + 8, 10.5, GREY, REG);
+for (const p of pts) { p.x = Math.min(MX + MW - MR - 2, Math.max(MX + MR + 2, p.x)); p.y = Math.min(MY + MH - MR - 2, Math.max(MY + MR + 2, p.y)); }
+for (const p of pts) if (Math.hypot(p.x - p.ox, p.y - p.oy) > 3) { line(p.ox, p.oy, p.x, p.y, 1.4, INK); disc(p.ox, p.oy, 2.2, INK); }
+for (const p of pts) { disc(p.x, p.y, MR + 1.5, WHITE); badge(p.n, p.x, p.y, MR, p.n === 1 ? INK : RED); }
+y = MY + MH + 14;
 
-// top stories beside the map
-const TX = MX + MW + 18, TW = W - M - TX;
-text('TOP STORIES', TX, MY, 12, RED, BOLD, 1.6);
-let ty = MY + 22;
-const topSize = Math.min(...TOP.map((t) => fit(t[1], 16, BOLD, TW - 24))); // one size for all six
-for (const [n, head, sub] of TOP) {
-  badge(n, TX + 9, ty + 7.5, 9);
-  text(head, TX + 24, ty, topSize, INK, BOLD);
-  text(sub, TX + 24, ty + 21, 12, GREY, REG);
-  ty += 44;
-}
-y = Math.max(MY + MH + 26, ty) + 2;
-rect(M, y, W - 2 * M, 2, INK);
-y += 12;
-
-// four columns of regional briefs (the fifth section continues the last column)
-const COLS = 4, GAP = 18, CW = (W - 2 * M - GAP * (COLS - 1)) / COLS;
-const colOf = [0, 0, 1, 2, 3, 3];
-const cy = [y, y, y, y];
-SECTIONS.forEach(([title, list], si) => {
-  const c = colOf[si], x = M + c * (CW + GAP);
-  if (cy[c] > y) cy[c] += 6;
-  text(title, x, cy[c], fit(title, 11.5, BOLD, CW, 1.4), RED, BOLD, 1.4);
-  rect(x, cy[c] + 17, CW, 1.5, RED);
-  cy[c] += 26;
-  for (const [n, head] of list) {
-    badge(n, x + 8, cy[c] + 6.5, 8);
-    cy[c] = para(head, x + 22, cy[c], 12, INK, BOLD, CW - 22, 1.52) + 8;
-  }
+// the stories: two columns of one-line headlines, each with its number and section icon
+// each headline as large as fits, at most 20 px cap height, letters set a touch tighter
+const GAP = 20, CW = (W - 2 * M - GAP) / 2, TXO = 60, TR = -0.35;
+ROWS.forEach(([cat, head], i) => {
+  const col = i < NROW ? 0 : 1, row = i < NROW ? i : i - NROW;
+  const x = M + col * (CW + GAP), ry = y + row * ROWH;
+  badge(i + 2, x + 11, ry + 11, 11, RED);
+  icon(cat, x + 29, ry + 1, 21);
+  const hsize = fit(head, 20, BOLD, CW - TXO - 10, TR);
+  text(head, x + TXO, ry + 1 + (20 - hsize) / 2, hsize, INK, BOLD, TR);
 });
-for (let c = 1; c < COLS; c++) rect(M + c * (CW + GAP) - GAP / 2, y, 1, Math.max(...cy) - y - 8, [150, 145, 135]);
+rect(M + CW + GAP / 2, y - 4, 1, NROW * ROWH - 4, [170, 164, 150]);
 
 // ---------- PNG ----------
 const CRC = new Int32Array(256);

@@ -4,16 +4,16 @@
 [![rank](https://make.fun/badge/news-image-20261118/hieudao151093/world-news-2026-11-18/rank.svg)](https://make.fun/bounty/news-image-20261118/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261118)
 [![reward](https://make.fun/badge/news-image-20261118/hieudao151093/world-news-2026-11-18/reward.svg)](https://make.fun/bounty/news-image-20261118?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261118)
 
-A front page of the world's news on **Wednesday 18 November 2026**: 33 stories from six continents and a
-world map whose numbered markers show where each happened. It is drawn from scratch by one Node 22 program
-with the standard library only: its own anti-aliased single-stroke typeface (upper and lower case), coarse
-coastlines, flags, map-marker layout and PNG encoder.
+A front page of the world's news on **Wednesday 18 November 2026**: 27 stories from six continents, each a
+one-line headline with a section icon (politics, conflict, economy, climate, health, tech, sport, culture),
+and a world map whose numbered markers show where each happened. Built to stay readable at 300 px wide.
+It is drawn from scratch by one Node 22 program with the standard library only: its own anti-aliased
+single-stroke typeface (upper and lower case), smoothed coastlines, icons, flags, marker layout and PNG
+encoder.
 
-Lead: Trump lands in Shenzhen for APEC as Xi and Putin meet. Top stories: Iranian drones target a US base
-in Kuwait; Nvidia's record quarter halts a tech sell-off; COP31 splits over a fossil-fuel exit; WHO urges
-Gaza aid as floods swamp camps; the EU proposes a EUR 45bn loan for Ukraine; Germany pledges new air
-defences. Plus briefs from the Americas, Europe, the Middle East and Africa, Asia-Pacific, sport, tech
-and culture.
+Lead: Trump lands in China for APEC as Xi and Putin meet in Shenzhen. Also: Iranian drones target a US
+base in Kuwait; Nvidia's record quarter lifts stocks; COP31 splits on fossil fuels; WHO urges aid for
+flooded Gaza; a EUR 45bn EU loan plan for Ukraine; and briefs from every region, sport, tech and culture.
 
 ## Run it
 
